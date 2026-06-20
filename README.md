@@ -107,6 +107,52 @@ This architecture diagram illustrates the hybrid retrieval flow: query understan
 
 ## Running the App
 
+## Setup Instructions
+
+### API Keys
+
+Create a `.env` file in the project root with:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL_NAME=llama-3.3-70b-versatile
+```
+
+Notes:
+
+- `GROQ_API_KEY` is required for full LLM response generation.
+- If `GROQ_API_KEY` is missing, Hybrid RAG returns fallback extractive context.
+
+### Backend Setup and Run
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python -m uvicorn api.main_api:app --host 127.0.0.1 --port 8002
+```
+
+### Frontend Setup and Run
+
+```bash
+cd ui
+npm install
+npm run dev
+```
+
+Frontend default URL: `http://127.0.0.1:3000`
+Backend default URL: `http://127.0.0.1:8002`
+
+### Demo Credentials (All 5 Roles)
+
+| Username | Password | Role |
+|---|---|---|
+| `admin_user` | `password123` | `admin` |
+| `doctor_user` | `password123` | `doctor` |
+| `nurse_user` | `password123` | `nurse` |
+| `billing_user` | `password123` | `billing_executive` |
+| `tech_user` | `password123` | `technician` |
+
 ### Backend
 
 ```bash
@@ -177,6 +223,22 @@ Expected behavior:
 - Restricted collection content must be blocked with a clear role-aware denial message.
 - Allowed collection content should still be answered normally with citations.
 - No restricted document citation should appear in blocked responses.
+
+RBAC blocking evidence (restricted collection access):
+
+The following screenshots show adversarial attempts to access restricted content (billing, calibration/equipment, and claim-rule data) by roles that are not authorized for those collections. In each case, MediBot correctly blocks the request at the retrieval layer, preventing restricted chunks from reaching the LLM.
+
+#### Doctor blocked from caliberation data
+
+![Doctor access blocked from caliberation data](Doctor%20Access%20blocked%20for%20from%20caliberation.PNG)
+
+#### Nurse blocked from billing collection
+
+![Nurse access blocked for billing collection](Nurse%20Access%20blocked%20for%20billing%20collection.PNG)
+
+#### Technician blocked from claim rules
+
+![Technician access blocked for claim rules](Technician%20Access%20blocked%20for%20claim%20rules.PNG)
 
 ### Document Parsing Validation
 
