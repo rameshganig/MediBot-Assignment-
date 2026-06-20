@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Local environment files
+.env
+.env.*
+
+# Logs and runtime artifacts
+*.log
+
+# VS Code local settings
+.vscode/
+
+# Node / Next.js
+ui/node_modules/
+ui/.next/
+ui/out/
+ui/.turbo/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Notebook checkpoints
+.ipynb_checkpoints/

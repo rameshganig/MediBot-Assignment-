@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+pandas
+groq
+langchain-core
+langchain-groq
+langchain-qdrant
+langchain-huggingface
+qdrant-client
+fastembed
+sentence-transformers
+docling
