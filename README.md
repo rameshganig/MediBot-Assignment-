@@ -1,4 +1,4 @@
-# MediBot Assignment Resources
+# MediBot Assignment
 
 ## Overview
 
@@ -121,8 +121,72 @@ npm install
 npm run dev
 ```
 
-## Notes
+### Hybrid RAG Validation
 
-- The conversation area is fixed-height and scrollable inside the chat panel.
-- The app is designed so the page itself does not scroll while the message history does.
-- Debug log files were removed from the repository root to keep the workspace clean.
+Suggested test prompts:
+
+- [doctor] "In the drug formulary, what is the dosing guidance for amoxicillin in adults?"
+- [doctor] "Which section mentions ICD-10 code E11 and its diagnostic category?"
+- [technician] "Find calibration steps for equipment model GE Vivid S60."
+- [technician] "Where is the maintenance schedule for Philips IntelliVue MX800 documented?"
+
+Expected behavior:
+
+- Retrieval type should be `Hybrid RAG`.
+- Answer should include citations with `source_document` and `section_title`.
+- Role access must still be enforced (for example, nurse cannot retrieve equipment-only content).
+
+### Reranking Validation
+
+Suggested test prompts:
+
+- [nurse] "Show the post-op infection control steps for ICU patients and include isolation guidance."
+- [doctor] "For pneumonia treatment protocol, include dosage timing and contraindications."
+
+Expected behavior:
+
+- Initial retrieval should bring a broader candidate set (for example top-10).
+- Logged reranker scores should reorder candidates by relevance to the exact question.
+- Final answer should be grounded only in the top reranked chunks (for example top-3), with citations.
+
+### SQL RAG Validation
+
+Suggested test prompts:
+
+- [billing_executive] "How many claims were approved last month?"
+- [admin] "Which equipment category has the highest number of open maintenance tickets?"
+- [billing_executive] "Show pending claims for Blue Cross insurance."
+
+Expected behavior:
+
+- Retrieval type should be `sql_rag` for analytical questions.
+- The executed query must be a clean SQL statement (no markdown fences, no explanatory text).
+- Response should return a natural-language summary with a citation to the SQL source context.
+- Only `billing_executive` and `admin` should be able to run SQL RAG successfully.
+
+### RBAC Validation
+
+Suggested test prompts:
+
+- [nurse] "Show me insurance billing code references and claim submission rules."
+- [billing_executive] "Provide ICU drug protocol for sepsis treatment."
+- [technician] "Give me hospital leave policy and calibration checklist for GE Vivid S60."
+
+Expected behavior:
+
+- Restricted collection content must be blocked with a clear role-aware denial message.
+- Allowed collection content should still be answered normally with citations.
+- No restricted document citation should appear in blocked responses.
+
+### Document Parsing Validation
+
+Suggested test prompts:
+
+- [technician] "In the equipment manual, what are the quarterly, annual, and 18-month maintenance tasks?"
+- [billing_executive] "From the claim submission guide, list the exact step-by-step workflow headings."
+
+Expected behavior:
+
+- First ingestion run may take longer due to model download and parser initialization.
+- Chunk text should preserve parent heading context so extracted answers remain interpretable.
+- Citations should point to relevant section titles rather than generic document-level labels.
