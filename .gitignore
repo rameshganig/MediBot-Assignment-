@@ -27,3 +27,7 @@ Thumbs.db
 
 # Notebook checkpoints
 .ipynb_checkpoints/
+
+# Assignment artifacts
+Medibot_Assignment_Instruction.md
+MediBot_Assignment_Instructions.pdf
